@@ -1,0 +1,16 @@
+fixtures:
+  forge: "https://forge.puppetlabs.com"
+  forge_modules:
+    sudo: "saz/sudo"
+  repositories:
+    stdlib:
+      repo: 'git://github.com/puppetlabs/puppetlabs-stdlib.git'
+      ref: '4.1.0'
+    nodejs:
+      repo: 'https://github.com/voxpupuli/puppet-nodejs.git'
+    python:
+      repo: 'https://github.com/stankevich/puppet-python.git'
+    apt:
+      repo: 'https://github.com/puppetlabs/puppetlabs-apt.git'
+  symlinks:
+    jupyterhub: "#{source_dir}"

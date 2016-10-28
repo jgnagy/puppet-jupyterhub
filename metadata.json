@@ -1,0 +1,45 @@
+{
+  "name": "knuedge-jupyterhub",
+  "version": "0.0.2",
+  "author": "Daniel Schaaff",
+  "summary": "Install and configure Jupyterhub",
+  "license": "MIT",
+  "source": "https://github.com/knuedge/puppet-jupyterhub.git",
+  "project_page": "https://github.com/knuedge/puppet-jupyterhub",
+  "issues_url": "https://github.com/knuedge/puppet-jupyterhub/issues",
+  "tags": ["jupyterhub", "jupyter", "jupyter-notebook","ipython"],
+  "dependencies": [
+    {
+     "name":"puppetlabs-stdlib",
+     "version_requirement":">= 1.0.0"
+    },
+     {
+      "name":"puppet-nodejs",
+      "version_requirement":">= 2.0.0"
+    },
+     {
+     "name":"stankevich-python",
+     "version_requirement":">= 1.17.0"
+     },
+     {
+     "name":"saz/sudo",
+     "version_requirement":">= 3.1.0"
+     }
+  ],
+  "operatingsystem_support": [
+    {
+       "operatingsystem": "Ubuntu",
+       "operatingsystemrelease": ["14.04", "16.04"]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": ">=3.0.0 <4.7.0"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": ">=3.0.0 <4.7.0"
+    }
+  ]
+}

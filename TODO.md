@@ -1,0 +1,3 @@
+- make daemon args pull from variable (set config to /etc/jupyterhub/jupyterhub_config.py)
+- add variable validation
+- change manage sudo to false by default

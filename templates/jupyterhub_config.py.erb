@@ -6,7 +6,9 @@ def to_python(value)
     'True'
   when value.is_a?(FalseClass) || value == 'false'
     'False'
-  when value.match /^[0-9]+(\.[0-9]+)?$/
+  when value.is_a?(Symbol)
+    to_python(value.to_s)
+  when value.to_s.match(/^[0-9]+(\.[0-9]+)?$/)
     value # hand over numerics
   when value.is_a?(String)
     "'" + value + "'"

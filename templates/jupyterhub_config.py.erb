@@ -1,4 +1,18 @@
-# Configuration file for jupyterhub.
+<%
+# A utility function to convert ruby / puppet values
+def to_python(value)
+  case
+  when value.is_a?(TrueClass) || value == 'true'
+    'True'
+  when value.is_a?(FalseClass) || value == 'false'
+    'False'
+  when value.is_a?(String)
+    "'" + value + "'"
+  else
+    value # didn't know how to convert, leave it as-is
+  end
+end
+%># Configuration file for jupyterhub.
 
 #------------------------------------------------------------------------------
 # Application(SingletonConfigurable) configuration
@@ -8,17 +22,17 @@
 
 ## The date format used by logging formatters for %(asctime)s
 <% unless @log_datefmt.nil? -%>
-c.Application.log_datefmt = '<%= @log_datefmt  %>'
+c.Application.log_datefmt = <%= to_python @log_datefmt  %>
 <% end -%>
 
 ## The Logging format template
 <% unless @log_format.nil? -%>
-c.Application.log_format = '<%= @log_format  %>'
+c.Application.log_format = <%= to_python @log_format  %>
 <% end -%>
 
 ## Set the log level by value or name.
-<% unless @log_level .nil? -%>
-c.Application.log_level = <%= @log_level  %>
+<% unless @log_level.nil? -%>
+c.Application.log_level = <%= to_python @log_level  %>
 <% end -%>
 
 #------------------------------------------------------------------------------
@@ -30,8 +44,8 @@ c.Application.log_level = <%= @log_level  %>
 ## Grant admin users permission to access single-user servers.
 #  
 #  Users should be properly informed if this is enabled.
-<% unless @local_aujh_admin_accessth_add_user_cmd .nil? -%>
-c.JupyterHub.admin_access = '<%= @jh_admin_access  %>'
+<% unless @local_aujh_admin_accessth_add_user_cmd.nil? -%>
+c.JupyterHub.admin_access = <%= to_python @jh_admin_access  %>
 <% end -%>
 
 ## DEPRECATED, use Authenticator.admin_users instead.
@@ -39,14 +53,14 @@ c.JupyterHub.admin_access = '<%= @jh_admin_access  %>'
 
 ## Answer yes to any questions (e.g. confirm overwrite)
 <% unless @jh_answer_yes.nil? -%>
-c.JupyterHub.answer_yes = <%= @jh_answer_yes  %>
+c.JupyterHub.answer_yes = <%= to_python @jh_answer_yes  %>
 <% end -%>
 
 ## Dict of token:username to be loaded into the database.
 #  
 #  Allows ahead-of-time generation of API tokens for use by services.
-<% unless @jh_api_tokens .nil? -%>
-c.JupyterHub.api_tokens = '<%= @jh_api_tokens  %>'
+<% unless @jh_api_tokens.nil? -%>
+c.JupyterHub.api_tokens = <%= to_python @jh_api_tokens  %>
 <% end -%>
 
 
@@ -61,13 +75,13 @@ c.JupyterHub.api_tokens = '<%= @jh_api_tokens  %>'
 #  - takes two arguments: (handler, data),
 #    where `handler` is the calling web.RequestHandler,
 #    and `data` is the POST form data from the login page.
-<% unless @jh_authenticator_class .nil? -%>
-c.JupyterHub.authenticator_class = '<%= @jh_authenticator_class  %>'
+<% unless @jh_authenticator_class.nil? -%>
+c.JupyterHub.authenticator_class = <%= to_python @jh_authenticator_class  %>
 <% end -%>
 
 ## The base URL of the entire application
-<% unless @jh_base_url .nil? -%>
-c.JupyterHub.base_url = '<%= @jh_base_url  %>'
+<% unless @jh_base_url.nil? -%>
+c.JupyterHub.base_url = <%= to_python @jh_base_url  %>
 <% end -%>
 
 ## Whether to shutdown the proxy when the Hub shuts down.
@@ -81,8 +95,8 @@ c.JupyterHub.base_url = '<%= @jh_base_url  %>'
 #  only shutdown the Hub, leaving everything else running.
 #  
 #  The Hub should be able to resume from database state.
-<% unless @jh_cleanup_proxy .nil? -%>
-c.JupyterHub.cleanup_proxy = <%= @jh_cleanup_proxy  %>
+<% unless @jh_cleanup_proxy.nil? -%>
+c.JupyterHub.cleanup_proxy = <%= to_python @jh_cleanup_proxy  %>
 <% end -%>
 
 ## Whether to shutdown single-user servers when the Hub shuts down.
@@ -94,20 +108,20 @@ c.JupyterHub.cleanup_proxy = <%= @jh_cleanup_proxy  %>
 #  shutdown the Hub, leaving everything else running.
 #  
 #  The Hub should be able to resume from database state.
-<% unless @jh_cleanup_servers .nil? -%>
-c.JupyterHub.cleanup_servers = <%= @jh_cleanup_servers  %>
+<% unless @jh_cleanup_servers.nil? -%>
+c.JupyterHub.cleanup_servers = <%= to_python @jh_cleanup_servers %>
 <% end -%>
 
 ## The config file to load
-c.JupyterHub.config_file = '<%= @confdir -%>/<%= @jh_config_file -%>'
+c.JupyterHub.config_file = <%= to_python File.join(@confdir, @jh_config_file) %>
 
 ## Confirm that JupyterHub should be run without SSL. This is **NOT RECOMMENDED**
 #  unless SSL termination is being handled by another layer.
-c.JupyterHub.confirm_no_ssl = <%= @jh_confirm_no_ssl -%>
+c.JupyterHub.confirm_no_ssl = <%= to_python @jh_confirm_no_ssl %>
 
 ## Number of days for a login cookie to be valid. Default is two weeks.
-<% unless @jh_cookie_max_age_days .nil? -%>
-c.JupyterHub.cookie_max_age_days = <%= @jh_cookie_max_age_days  %>
+<% unless @jh_cookie_max_age_days.nil? -%>
+c.JupyterHub.cookie_max_age_days = <%= to_python @jh_cookie_max_age_days  %>
 <% end -%>
 
 ## The cookie secret to use to encrypt cookies.
@@ -115,110 +129,110 @@ c.JupyterHub.cookie_max_age_days = <%= @jh_cookie_max_age_days  %>
 #  Loaded from the JPY_COOKIE_SECRET env variable by default.
 #c.JupyterHub.cookie_secret = b''
 <% unless @jh_cookie_secret.nil? -%>
-c.JupyterHub.cookie_secret = '<%= @jh_cookie_secret %>'
+c.JupyterHub.cookie_secret = <%= to_python @jh_cookie_secret %>
 <% end -%>
 
 ## File in which to store the cookie secret.
-<% unless @jh_cookie_secret_file .nil? -%>
-c.JupyterHub.cookie_secret_file = '<%= @jh_cookie_secret_file  %>'
+<% unless @jh_cookie_secret_file.nil? -%>
+c.JupyterHub.cookie_secret_file = <%= to_python @jh_cookie_secret_file  %>
 <% end -%>
 
 ## The location of jupyterhub data files (e.g. /usr/local/share/jupyter/hub)
-<% unless @jh_data_files_path .nil? -%>
-c.JupyterHub.data_files_path = '<%= @jh_data_files_path  %>'
+<% unless @jh_data_files_path.nil? -%>
+c.JupyterHub.data_files_path = <%= to_python @jh_data_files_path  %>
 <% end -%>
 
 ## Include any kwargs to pass to the database connection. See
 #  sqlalchemy.create_engine for details.
-<% unless @jh_db_kwargs .nil? -%>
-c.JupyterHub.db_kwargs = <%= @jh_db_kwargs  %>
+<% unless @jh_db_kwargs.nil? -%>
+c.JupyterHub.db_kwargs = <%= to_python @jh_db_kwargs  %>
 <% end -%>
 
 ## url for the database. e.g. `sqlite:///jupyterhub.sqlite`
-<% unless @jh_db_url .nil? -%>
-c.JupyterHub.db_url = '<%= @jh_db_url  %>'
+<% unless @jh_db_url.nil? -%>
+c.JupyterHub.db_url = <%= to_python @jh_db_url  %>
 <% end -%>
 
 ## log all database transactions. This has A LOT of output
-<% unless @jh_debug_db .nil? -%>
-c.JupyterHub.debug_db = <%= @jh_debug_db  %>
+<% unless @jh_debug_db.nil? -%>
+c.JupyterHub.debug_db = <%= to_python @jh_debug_db  %>
 <% end -%>
 
 ## show debug output in configurable-http-proxy
-<% unless @jh_debug_proxy .nil? -%>
-c.JupyterHub.debug_proxy = <%= @jh_debug_proxy  %>
+<% unless @jh_debug_proxy.nil? -%>
+c.JupyterHub.debug_proxy = <%= to_python @jh_debug_proxy  %>
 <% end -%>
 
 ## Send JupyterHub's logs to this file.
 #  
 #  This will *only* include the logs of the Hub itself, not the logs of the proxy
 #  or any single-user servers.
-<% unless @jh_extra_log_file .nil? -%>
-c.JupyterHub.extra_log_file = '<%= @jh_extra_log_file  %>'
+<% unless @jh_extra_log_file.nil? -%>
+c.JupyterHub.extra_log_file = <%= to_python @jh_extra_log_file  %>
 <% end -%>
 
 ## Extra log handlers to set on JupyterHub logger
-<% unless @jh_extra_log_handlers .nil? -%>
-c.JupyterHub.extra_log_handlers = '<%= @jh_extra_log_handlers  %>'
+<% unless @jh_extra_log_handlers.nil? -%>
+c.JupyterHub.extra_log_handlers = <%= to_python @jh_extra_log_handlers  %>
 <% end -%>
 
 ## Generate default config file
 c.JupyterHub.generate_config = False
 
 ## The ip for this process
-<% unless @jh_hub_ip .nil? -%>
-c.JupyterHub.hub_ip = '<%= @jh_hub_ip  %>'
+<% unless @jh_hub_ip.nil? -%>
+c.JupyterHub.hub_ip = <%= to_python @jh_hub_ip  %>
 <% end -%>
 
 
 ## The port for this process
-<% unless @jh_hub_port .nil? -%>
-c.JupyterHub.hub_port = <%= @jh_hub_port  %>
+<% unless @jh_hub_port.nil? -%>
+c.JupyterHub.hub_port = <%= to_python @jh_hub_port  %>
 <% end -%>
 
 ## The prefix for the hub server. Must not be '/'
-<% unless @jh_hub_prefix .nil? -%>
-c.JupyterHub.hub_prefix = '<%= @jh_hub_prefix  %>'
+<% unless @jh_hub_prefix.nil? -%>
+c.JupyterHub.hub_prefix = <%= to_python @jh_hub_prefix  %>
 <% end -%>
 
 ## The public facing ip of the whole application (the proxy)
-c.JupyterHub.ip = '<%= @jh_ip -%>'
+c.JupyterHub.ip = <%= to_python @jh_ip %>
 
 ## Supply extra arguments that will be passed to Jinja environment.
-<% unless @jh_jinja_ev_options .nil? -%>
-c.JupyterHub.jinja_environment_options = <%= @jh_jinja_ev_options  %>
+<% unless @jh_jinja_ev_options.nil? -%>
+c.JupyterHub.jinja_environment_options = <%= to_python @jh_jinja_ev_options  %>
 <% end -%>
 
 ## Interval (in seconds) at which to update last-activity timestamps.
-<% unless @jh_last_activity_interval .nil? -%>
-c.JupyterHub.last_activity_interval = <%= @jh_last_activity_interval  %>
+<% unless @jh_last_activity_interval.nil? -%>
+c.JupyterHub.last_activity_interval = <%= to_python @jh_last_activity_interval  %>
 <% end -%>
 
 ## Specify path to a logo image to override the Jupyter logo in the banner.
 #c.JupyterHub.logo_file = 
 <% unless @jh_logo_file.nil? -%>
-c.JupyterHub.logo_file = '<%= @jh_logo_file %>'
+c.JupyterHub.logo_file = <%= to_python @jh_logo_file %>
 <% end -%>
 
 ## File to write PID Useful for daemonizing jupyterhub.
 <% unless @jh_pid_file.nil? -%>
-c.JupyterHub.pid_file = '<%= @jh_pid_file %>'
+c.JupyterHub.pid_file = <%= to_python @jh_pid_file %>
 <% end -%>
 
 ## The public facing port of the proxy
-<% unless @jh_port .nil? -%>
-c.JupyterHub.port = <%= @jh_port  %>
+<% unless @jh_port.nil? -%>
+c.JupyterHub.port = <%= to_python @jh_port %>
 <% end -%>
 
 ## The ip for the proxy API handlers
-<% unless @jh_proxy_api_ip .nil? -%>
-c.JupyterHub.proxy_api_ip = '<%= @jh_proxy_api_ip  %>'
+<% unless @jh_proxy_api_ip.nil? -%>
+c.JupyterHub.proxy_api_ip = <%= to_python @jh_proxy_api_ip  %>
 <% end -%>
 
 ## The port for the proxy API handlers
 #c.JupyterHub.proxy_api_port = 0
 <% unless @jh_proxy_api_port.nil? -%>
-c.JupyterHub.proxy_api_port = '<%= @jh_proxy_api_port %>'
+c.JupyterHub.proxy_api_port = <%= to_python @jh_proxy_api_port %>
 <% end -%>
 
 ## The Proxy Auth token.
@@ -226,45 +240,45 @@ c.JupyterHub.proxy_api_port = '<%= @jh_proxy_api_port %>'
 #  Loaded from the CONFIGPROXY_AUTH_TOKEN env variable by default.
 #c.JupyterHub.proxy_auth_token = ''
 <% unless @jh_proxy_api_port.nil? -%>
-c.JupyterHub.proxy_auth_token = '<%= @jh_proxy_auth_token %>'
+c.JupyterHub.proxy_auth_token = <%= to_python @jh_proxy_auth_token %>
 <% end -%>
 
 ## Interval (in seconds) at which to check if the proxy is running.
-<% unless @jh_proxy_check_interval .nil? -%>
-c.JupyterHub.proxy_check_interval = <%= @jh_proxy_check_interval  %>
+<% unless @jh_proxy_check_interval.nil? -%>
+c.JupyterHub.proxy_check_interval = <%= to_python @jh_proxy_check_interval %>
 <% end -%>
 
 ## The command to start the http proxy.
 #  
 #  Only override if configurable-http-proxy is not on your PATH
-<% unless @jh_proxy_cmd .nil? -%>
-c.JupyterHub.proxy_cmd = ['<%= @jh_proxy_cmd  %>']
+<% unless @jh_proxy_cmd.nil? -%>
+c.JupyterHub.proxy_cmd = [<%= to_python @jh_proxy_cmd  %>]
 <% end -%>
 
 ## Purge and reset the database.
-<% unless @jh_reset_db .nil? -%>
-c.JupyterHub.reset_db = <%= @jh_reset_db  %>
+<% unless @jh_reset_db.nil? -%>
+c.JupyterHub.reset_db = <%= to_python @jh_reset_db  %>
 <% end -%>
 
 ## The class to use for spawning single-user servers.
 #  
 #  Should be a subclass of Spawner.
-c.JupyterHub.spawner_class = '<%= @jh_spawner_class %>'
+c.JupyterHub.spawner_class = <%= to_python @jh_spawner_class %>
 
 ## Path to SSL certificate file for the public facing interface of the proxy
 #  
 #  Use with ssl_key
-c.JupyterHub.ssl_key = '<%= @ssl_key %>'
+c.JupyterHub.ssl_key = <%= to_python @ssl_key %>
 
 ## Path to SSL key file for the public facing interface of the proxy
 #  
 #  Use with ssl_cert
-c.JupyterHub.ssl_cert = '<%= @ssl_cert %>'
+c.JupyterHub.ssl_cert = <%= to_python @ssl_cert %>
 
 ## Host to send statds metrics to
 #c.JupyterHub.statsd_host = ''
 <% unless @jh_statsd_host.nil? -%>
-c.JupyterHub.statsd_host = '<%= @jh_statsd_host %>'
+c.JupyterHub.statsd_host = <%= to_python @jh_statsd_host %>
 <% end -%>
 
 ## Port on which to send statsd metrics about the hub
@@ -273,7 +287,7 @@ c.JupyterHub.statsd_host = '<%= @jh_statsd_host %>'
 ## Prefix to use for all metrics sent by jupyterhub to statsd
 #c.JupyterHub.statsd_prefix = 'jupyterhub'
 <% unless @jh_statsd_prefix.nil? -%>
-c.JupyterHub.statsd_prefix = '<%= @jh_statsd_prefix %>'
+c.JupyterHub.statsd_prefix = <%= to_python @jh_statsd_prefix %>
 <% end -%>
 
 ## Run single-user servers on subdomains of this host.
@@ -291,19 +305,19 @@ c.JupyterHub.statsd_prefix = '<%= @jh_statsd_prefix %>'
 #  When using SSL (i.e. always) this also requires a wildcard SSL certificate.
 #c.JupyterHub.subdomain_host = ''
 <% unless @jh_subdomain_host.nil? -%>
-c.JupyterHub.subdomain_host = '<%= @jh_subdomain_host %>'
+c.JupyterHub.subdomain_host = <%= to_python @jh_subdomain_host %>
 <% end -%>
 
 ## Paths to search for jinja templates.
 #c.JupyterHub.template_paths = []
 <% unless @jh_template_paths.nil? -%>
-c.JupyterHub.template_paths = '<%= @jh_template_paths %>'
+c.JupyterHub.template_paths = <%= to_python @jh_template_paths %>
 <% end -%>
 
 ## Extra settings overrides to pass to the tornado application.
 #c.JupyterHub.tornado_settings = {}
 <% unless @jh_tornado_settings.nil? -%>
-c.JupyterHub.tornado_settings = '<%= @jh_tornado_settings %>'
+c.JupyterHub.tornado_settings = <%= to_python @jh_tornado_settings %>
 <% end -%>
 
 #------------------------------------------------------------------------------
@@ -319,16 +333,16 @@ c.JupyterHub.tornado_settings = '<%= @jh_tornado_settings %>'
 ## Extra arguments to be passed to the single-user server
 #c.Spawner.args = []
 <% unless @spawner_args.nil? -%>
-c.Spawner.args = '<%= @spawner_args %>'
+c.Spawner.args = <%= to_python @spawner_args %>
 <% end -%>
 
 ## The command used for starting notebooks.
-<% unless @spawner_cmd .nil? -%>
-c.Spawner.cmd = <%= @spawner_cmd  %>
+<% unless @spawner_cmd.nil? -%>
+c.Spawner.cmd = <%= to_python @spawner_cmd  %>
 <% end -%>
 
 ## Enable debug-logging of the single-user server
-c.Spawner.debug = <%= @spawner_debug %>
+c.Spawner.debug = <%= to_python @spawner_debug %>
 
 ## The default URL for the single-user server.
 #  
@@ -338,21 +352,21 @@ c.Spawner.debug = <%= @spawner_debug %>
 #  `%U` will be expanded to the user's username
 #c.Spawner.default_url = ''
 <% unless @spawner_default_url.nil? -%>
-c.Spawner.default_url = '<%= @spawner_default_url %>'
+c.Spawner.default_url = <%= to_python @spawner_default_url %>
 <% end -%>
 
 ## Disable per-user configuration of single-user servers.
 #  
 #  This prevents any config in users' $HOME directories from having an effect on
 #  their server.
-<% unless @spawner_disable_user_config .nil? -%>
-c.Spawner.disable_user_config = <%= @spawner_disable_user_config  %>
+<% unless @spawner_disable_user_config.nil? -%>
+c.Spawner.disable_user_config = <%= to_python @spawner_disable_user_config %>
 <% end -%>
 
 ## Whitelist of environment variables for the subprocess to inherit
 #c.Spawner.env_keep = ['PATH', 'PYTHONPATH', 'CONDA_ROOT', 'CONDA_DEFAULT_ENV', 'VIRTUAL_ENV', 'LANG', 'LC_ALL']
 <% unless @spawner_env_keep.nil? -%>
-c.Spawner.env_keep = <%= @spawner_env_keep %>
+c.Spawner.env_keep = <%= to_python @spawner_env_keep %>
 <% end -%>
 
 ## Environment variables to load for the Spawner.
@@ -371,12 +385,12 @@ c.Spawner.environment = {<%= @spawner_environment %>}
 #  Once a server has successfully been spawned, this is the amount of time we
 #  wait before assuming that the server is unable to accept connections.
 <% unless @spawner_http_timeout.nil? -%>
-c.Spawner.http_timeout = <%= @spawner_http_timeout %>
+c.Spawner.http_timeout = <%= to_python @spawner_http_timeout %>
 <% end -%>
 
 ## The IP address (or hostname) the single-user server should listen on
 <% unless @spawner_ip.nil? -%>
-c.Spawner.ip = '<%= @spawner_ip %>'
+c.Spawner.ip = <%= to_python @spawner_ip %>
 <% end -%>
 
 ## The notebook directory for the single-user server
@@ -385,7 +399,7 @@ c.Spawner.ip = '<%= @spawner_ip %>'
 #  user's username
 #c.Spawner.notebook_dir = ''
 <% unless @spawner_notebook_dir.nil? -%>
-c.Spawner.notebook_dir = '<%= @spawner_notebook_dir%>'
+c.Spawner.notebook_dir = <%= to_python @spawner_notebook_dir%>
 <% end -%>
 
 ## An HTML form for options a user can specify on launching their server. The
@@ -405,7 +419,7 @@ c.Spawner.notebook_dir = '<%= @spawner_notebook_dir%>'
 
 ## Interval (in seconds) on which to poll the spawner.
 <% unless @spawner_poll_interval.nil? -%>
-c.Spawner.poll_interval = <%= @spawner_poll_interval %>
+c.Spawner.poll_interval = <%= to_python @spawner_poll_interval %>
 <% end -%>
 
 ## Timeout (in seconds) before giving up on the spawner.
@@ -415,7 +429,7 @@ c.Spawner.poll_interval = <%= @spawner_poll_interval %>
 #  takes longer than this. start should return when the server process is started
 #  and its location is known.
 <% unless @spawner_start_timeout.nil? -%>
-c.Spawner.start_timeout = <%= @spawner_start_timeout %>
+c.Spawner.start_timeout = <%= to_python @spawner_start_timeout %>
 <% end -%>
 
 #------------------------------------------------------------------------------
@@ -449,7 +463,7 @@ c.Spawner.start_timeout = <%= @spawner_start_timeout %>
 ## set of usernames of admin users
 #  
 #  If unspecified, only the user that launches the server will be admin.
-<% unless @authenticator_admin_users .nil? -%>
+<% unless @authenticator_admin_users.nil? -%>
 c.Authenticator.admin_users = {"<%= @authenticator_admin_users.join('","')-%>"}
 <% end -%>
 
@@ -505,18 +519,18 @@ c.Authenticator.username_pattern = '<%= @authenticator_username_pattern %>'
 #  
 #  when the user 'river' is created.
 #c.LocalAuthenticator.add_user_cmd = []
-<% unless @local_auth_add_user_cmd .nil? -%>
-c.LocalAuthenticator.add_user_cmd = '<%= @local_auth_add_user_cmd  %>'
+<% unless @local_auth_add_user_cmd.nil? -%>
+c.LocalAuthenticator.add_user_cmd = <%= to_python @local_auth_add_user_cmd  %>
 <% end -%>
 
 ## If a user is added that doesn't exist on the system, should I try to create
 #  the system user?
-<% unless @local_auth_create_users .nil? -%>
-c.LocalAuthenticator.create_system_users = <%= @local_auth_create_users  %>
+<% unless @local_auth_create_users.nil? -%>
+c.LocalAuthenticator.create_system_users = <%= to_python @local_auth_create_users %>
 <% end -%>
 
 ## Automatically whitelist anyone in this group.
-<% unless @local_auth_group_whitelist .nil? -%>
+<% unless @local_auth_group_whitelist.nil? -%>
 c.LocalAuthenticator.group_whitelist =  set(<%= @local_auth_group_whitelist -%>)
 <% end -%>
 
@@ -537,11 +551,11 @@ c.LocalAuthenticator.group_whitelist =  set(<%= @local_auth_group_whitelist -%>)
 #  It can be disabled with::
 #  
 #      c.PAMAuthenticator.open_sessions = False
-<% unless @pam_auth_open_sessions .nil? -%>
-c.PAMAuthenticator.open_sessions = <%= @pam_auth_open_sessions  %>
+<% unless @pam_auth_open_sessions.nil? -%>
+c.PAMAuthenticator.open_sessions = <%= to_python @pam_auth_open_sessions  %>
 <% end -%>
 
 ## The PAM service to use for authentication.
-<% unless @pam_auth_service .nil? -%>
-c.PAMAuthenticator.service= <%= @pam_auth_service  %>
+<% unless @pam_auth_service.nil? -%>
+c.PAMAuthenticator.service= <%= to_python @pam_auth_service  %>
 <% end -%>
